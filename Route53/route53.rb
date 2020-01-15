@@ -1,6 +1,18 @@
 CloudFormation do
   AWSTemplateFormatVersion("2010-09-09")
 
+  Parameter("myHostedZoneID") do
+    Type("String")
+  end
+
+  Parameter("myCloudFrontDistributionDomainName") do
+    Type("String")
+  end
+
+  Parameter("myRecordSetDomainName") do
+    Type("String")
+  end
+
 #  adds an Amazon Route 53 resource record set containing an SPF record for the domain name mysite.example.com
 # that uses the HostedZoneId property to specify the hosted zone.
   Resource("myDNSRecord") do

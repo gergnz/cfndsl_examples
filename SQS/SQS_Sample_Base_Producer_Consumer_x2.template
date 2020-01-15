@@ -9,8 +9,8 @@
       "Description" : "Run duration in minutes (max 60)",
       "Type" : "Number",
       "Default" : "20",
-      "MinValue" : "1",
-      "MaxValue" : "60",
+      "MinValue" : 1,
+      "MaxValue" : 60,
       "ConstraintDescription" : "must be number >= 1 and <= 60."
     },
     

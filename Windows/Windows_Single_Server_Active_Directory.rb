@@ -44,7 +44,7 @@ CloudFormation do
     Description("Password for a separate Administrator account when the domain controller is in Restore Mode. Must be at least 8 characters containing letters, numbers and symbols")
     Type("String")
     AllowedPattern("(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*")
-    NoEcho(True)
+    NoEcho(true)
     MaxLength(32)
     MinLength(8)
   end

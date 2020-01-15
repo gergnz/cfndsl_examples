@@ -1,5 +1,10 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
+    "Parameters": {
+      "myHostedZoneID": { "Type": "String" },
+      "myCloudFrontDistributionDomainName": { "Type": "String" },
+      "myRecordSetDomainName": { "Type": "String" }
+    },
     "Resources" : {
 
 

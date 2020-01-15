@@ -25,9 +25,7 @@
 
   "Resources" : {
     "S3BucketForWebsiteContent" : {
-      "Type" : "AWS::S3::Bucket",
-      "Properties" : {
-      }
+      "Type" : "AWS::S3::Bucket"
     },
 
     "WebsiteCDN" : {

@@ -702,8 +702,8 @@ CloudFormation do
 
   Resource("FrontendServerLaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("Comment1", "Configure the FrontendServer to forward /backend requests to the backend servers")
-    Metadata("AWS::CloudFormation::Init": {
+    Metadata("Comment1": "Configure the FrontendServer to forward /backend requests to the backend servers",
+    "AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/etc/httpd/conf.d/maptobackend.conf" => {
@@ -893,8 +893,8 @@ CloudFormation do
 
   Resource("BackendLaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("Comment1", "Configure the Backend server to respond to requests")
-    Metadata("AWS::CloudFormation::Init": {
+    Metadata("Comment1": "Configure the Backend server to respond to requests",
+    "AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/var/www/html/index.html" => {

@@ -157,8 +157,8 @@ CloudFormation do
 
   Resource("WordPressFrontEnd") do
     Type("AWS::CloudFormation::Stack")
-    Metadata("Comment": "Create Wordpress web server farm attached to database.")
-    Metadata("AWS::CloudFormation::Init": {
+    Metadata("Comment": "Create Wordpress web server farm attached to database.",
+    "AWS::CloudFormation::Init": {
   "config" => {
     "files" => {
       "/etc/chef/node.json" => {

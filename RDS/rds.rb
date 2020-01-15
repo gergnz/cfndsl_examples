@@ -1,6 +1,46 @@
 CloudFormation do
   AWSTemplateFormatVersion("2010-09-09")
 
+  Parameter("MyDbSecurityByEC2SecurityGroup") do
+    Type("String")
+  end
+
+  Parameter("DBName") do
+    Type("String")
+  end
+
+  Parameter("DBUsername") do
+    Type("String")
+  end
+
+  Parameter("DBClass") do
+    Type("String")
+  end
+
+  Parameter("DBAllocatedStorage") do
+    Type("String")
+  end
+
+  Parameter("DBPassword") do
+    Type("String")
+  end
+
+  Parameter("MyDBName") do
+    Type("String")
+  end
+
+  Parameter("MyDBSubnetGroup") do
+    Type("String")
+  end
+
+  Parameter("MultiAZDatabase") do
+    Type("String")
+  end
+
+  Parameter("DBUser") do
+    Type("String")
+  end
+
 # Amazon RDS DB Instance Resource
   Resource("MyDB") do
     Type("AWS::RDS::DBInstance")

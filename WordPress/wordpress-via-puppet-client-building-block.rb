@@ -151,7 +151,7 @@ CloudFormation do
 
   Resource("WebServer") do
     Type("AWS::CloudFormation::Stack")
-    Metadata("Puppet", {
+    Metadata("Puppet": {
   "database" => "WordPressDB",
   "host"     => FnGetAtt("AppDatabase", "Outputs.DBAddress"),
   "password" => Ref("DatabasePassword"),

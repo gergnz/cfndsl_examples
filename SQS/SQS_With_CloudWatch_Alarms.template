@@ -13,9 +13,7 @@
  
   "Resources" : {
     "MyQueue" : {
-      "Type" : "AWS::SQS::Queue",
-      "Properties" : {
-      }
+      "Type" : "AWS::SQS::Queue"
     },
     "AlarmTopic": {
       "Type": "AWS::SNS::Topic",

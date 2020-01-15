@@ -230,8 +230,8 @@ CloudFormation do
       }
     }
   }
-})
-    Metadata("Puppet", {
+},
+    "Puppet": {
   "database" => "WordPressDB",
   "host"     => FnGetAtt("WordPressDatabase", "Endpoint.Address"),
   "password" => Ref("DatabasePassword"),

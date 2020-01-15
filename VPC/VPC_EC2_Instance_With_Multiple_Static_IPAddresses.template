@@ -121,7 +121,7 @@
       "Description" : "Primary private IP address of Eth0"
     },
     "SecondaryPrivateIPAddresses" : {
-      "Value" : { "Fn::Join" : [" ", [ "IP address", { "Fn::Select" : [ "0", { "Fn::GetAtt" : ["Eth0", "SecondaryPrivateIpAddresses"] }]}, "on subnet", {"Ref" : "SubnetId"}]]},
+      "Value" : { "Fn::Join" : [" ", [ "IP address", { "Fn::Select" : [ 0, [ { "Fn::GetAtt" : ["Eth0", "SecondaryPrivateIpAddresses"] }]]}, "on subnet", {"Ref" : "SubnetId"}]]},
       "Description" : "Secondary private IP address of Eth0"
     }
   }

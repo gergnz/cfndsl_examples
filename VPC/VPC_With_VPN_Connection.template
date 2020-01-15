@@ -27,8 +27,8 @@
     "VPNAddress" : {
       "Type" : "String",
       "Description" : "IP Address of your VPN device",
-      "MinLength": "7",
-      "MaxLength": "15",
+      "MinLength": 7,
+      "MaxLength": 15,
       "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})",
       "ConstraintDescription": "must be a valid IP address of the form x.x.x.x"
     },

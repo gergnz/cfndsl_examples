@@ -23,7 +23,7 @@
     "SecondaryIPAddressCount" : {
       "Type" : "Number",
       "Default" : "1",
-      "MinValue" : "1",
+      "MinValue" : 1,
       "MaxValue" : "5",
       "Description" : "Number of secondary IP addresses to assign to the network interface (1-5)",
       "ConstraintDescription": "must be a number from 1 to 5."

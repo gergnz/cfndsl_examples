@@ -20,7 +20,7 @@
     "MinInstances" : {
       "Description" : "The minimum number of Workers",
       "Type" : "Number",
-      "MinValue" : "0",
+      "MinValue" : 0,
       "Default"  : "0",
       "ConstraintDescription" : "Enter a number >=0"
     },
@@ -28,7 +28,7 @@
     "MaxInstances" : {
       "Description" : "The maximum number of Workers",
       "Type" : "Number",
-      "MinValue" : "1",
+      "MinValue" : 1,
       "Default"  : "1",
       "ConstraintDescription" : "Enter a number >1"
     },

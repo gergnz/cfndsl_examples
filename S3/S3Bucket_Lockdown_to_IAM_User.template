@@ -9,8 +9,8 @@
       "Type" : "String",
       "Description" : "IAM user login password",
       "NoEcho" : true,
-      "MinLength" : "3",
-      "MaxLength" : "50"
+      "MinLength" : 3,
+      "MaxLength" : 50
     }
   },
 

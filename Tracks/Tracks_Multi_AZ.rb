@@ -212,8 +212,8 @@ CloudFormation do
 
   Resource("ElasticLoadBalancer") do
     Type("AWS::ElasticLoadBalancing::LoadBalancer")
-    Metadata("Comment1", "Configure the Load Balancer with a simple health check and cookie-based stickiness")
-    Metadata("Comment2", "Use the signup path for healthcheck to avoid redirects - ELB healthcheck does not handle 302 return codes")
+    Metadata("Comment1": "Configure the Load Balancer with a simple health check and cookie-based stickiness",
+    "Comment2": "Use the signup path for healthcheck to avoid redirects - ELB healthcheck does not handle 302 return codes")
     Property("AvailabilityZones", FnGetAZs(""))
     Property("LBCookieStickinessPolicy", [
   {

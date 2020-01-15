@@ -205,8 +205,8 @@ CloudFormation do
       }
     }
   }
-})
-    Metadata("AWS::CloudFormation::Authentication", {
+},
+    "AWS::CloudFormation::Authentication": {
   "S3AccessCreds" => {
     "accessKeyId" => Ref("CfnKeys"),
     "secretKey"   => FnGetAtt("CfnKeys", "SecretAccessKey"),

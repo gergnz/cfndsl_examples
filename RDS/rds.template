@@ -1,5 +1,17 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
+    "Parameters": {
+        "MyDbSecurityByEC2SecurityGroup": { "Type": "String" },
+        "DBName": { "Type": "String" },
+        "DBUsername": { "Type": "String" },
+        "DBClass": { "Type": "String" },
+        "DBAllocatedStorage": { "Type": "String" },
+        "DBPassword": { "Type": "String" },
+        "MyDBName": { "Type": "String" },
+        "MyDBSubnetGroup": { "Type": "String" },
+        "MultiAZDatabase": { "Type": "String" },
+        "DBUser": { "Type": "String" }
+    },
     "Resources" : {
 
 "MyDB" : {
