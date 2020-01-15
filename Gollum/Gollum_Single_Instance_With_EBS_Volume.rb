@@ -253,8 +253,9 @@ CloudFormation do
 
   Resource("WaitCondition") do
     Type("AWS::CloudFormation::WaitCondition")
-    Metadata("Comment1", "Note that the WaitCondition is dependent on the volume mount point allowing the volume to be created and attached to the EC2 instance")
-    Metadata("Comment2", "The instance bootstrap script waits for the volume to be attached to the instance prior to installing Gollum and signalling completion")
+    Metadata(
+      "Comment1": "Note that the WaitCondition is dependent on the volume mount point allowing the volume to be created and attached to the EC2 instance",
+      "Comment2": "The instance bootstrap script waits for the volume to be attached to the instance prior to installing Gollum and signalling completion")
     DependsOn("MountPoint")
     Property("Handle", Ref("WaitHandle"))
     Property("Timeout", "300")

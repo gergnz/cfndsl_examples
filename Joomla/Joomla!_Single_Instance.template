@@ -19,11 +19,11 @@
     },
 
     "AdminPassword": {
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "The Joomla! admin account password",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "41",
+      "MinLength": 1,
+      "MaxLength": 41,
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },
@@ -32,40 +32,40 @@
       "Default": "joomladb",
       "Description" : "The Joomla! database name",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
+      "MinLength": 1,
+      "MaxLength": 64,
       "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
       "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
     },
 
     "DBUsername": {
       "Default": "admin",
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "The Joomla! database admin account username",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "16",
+      "MinLength": 1,
+      "MaxLength": 16,
       "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
       "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
     },
 
     "DBPassword": {
       "Default": "admin",
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "The Joomla! database admin account password",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "41",
+      "MinLength": 1,
+      "MaxLength": 41,
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },
 
     "DBRootPassword": {
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "Root password for MySQL",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "41",
+      "MinLength": 1,
+      "MaxLength": 41,
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },

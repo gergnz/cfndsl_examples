@@ -30,8 +30,8 @@
       "Default": "1",
       "Description" : "The number of Cache Nodes the Cache Cluster should have",
       "Type": "Number",
-      "MinValue": "1",
-      "MaxValue": "10",
+      "MinValue": 1,
+      "MaxValue": 10,
       "ConstraintDescription" : "must be between 5 and 10."
     },
     "SSHLocation" : {

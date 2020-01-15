@@ -16,14 +16,14 @@
     "StackNameOrId" : {
       "Description" : "The StackName or StackId containing the Puppet configuration metadata",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "1024"
+      "MinLength": 1,
+      "MaxLength": 1024
     },
     "ResourceName" : {
       "Description" : "The Logical Resource Name in the stack defined by StackName containing the resource with the Puppet configuration metadata",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "128",
+      "MinLength": 1,
+      "MaxLength": 128,
       "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*"
     },
     "PuppetClientSecurityGroup": {

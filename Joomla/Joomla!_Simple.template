@@ -14,12 +14,12 @@
     },
 
     "DBRootPassword": {
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "Root password for MySQL",
       "Default" : "admin",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "41",
+      "MinLength": 1,
+      "MaxLength": 41,
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "ConstraintDescription" : "must contain only alphanumeric characters."
     }

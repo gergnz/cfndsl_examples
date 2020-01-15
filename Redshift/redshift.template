@@ -33,7 +33,7 @@
     "MasterUserPassword" :  {
       "Description" : "The password that is associated with the master user account for the cluster that is being created.",
       "Type" : "String",
-      "NoEcho" : "true"
+      "NoEcho" : true
     },
     "InboundTraffic" : {
       "Description" : "Allow inbound traffic to the cluster from this CIDR range.",

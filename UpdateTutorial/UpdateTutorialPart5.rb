@@ -184,7 +184,7 @@ CloudFormation do
 
   Resource("WebServerConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("Comment", "Install a simple PHP application")
+    Metadata("Comment": "Install a simple PHP application")
     Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {

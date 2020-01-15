@@ -212,7 +212,7 @@ CloudFormation do
 
   Resource("ElasticLoadBalancer") do
     Type("AWS::ElasticLoadBalancing::LoadBalancer")
-    Metadata("Comment", "Configure the Load Balancer with a simple health check and cookie-based stickiness")
+    Metadata("Comment": "Configure the Load Balancer with a simple health check and cookie-based stickiness")
     Property("AvailabilityZones", FnGetAZs(""))
     Property("LBCookieStickinessPolicy", [
   {
@@ -253,9 +253,9 @@ CloudFormation do
 
   Resource("LaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("Comment1", "Configure the bootstrap helpers to install the Apache Web Server and PHP")
-    Metadata("Comment2", "The website content is downloaded from the CloudFormationPHPSample.zip file")
-    Metadata("AWS::CloudFormation::Init": {
+    Metadata("Comment1": "Configure the bootstrap helpers to install the Apache Web Server and PHP",
+    "Comment2": "The website content is downloaded from the CloudFormationPHPSample.zip file",
+    "AWS::CloudFormation::Init": {
   "config" => {
     "packages" => {
       "yum" => {

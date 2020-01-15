@@ -157,7 +157,7 @@ CloudFormation do
 
   Resource("WordPressFrontEnd") do
     Type("AWS::CloudFormation::Stack")
-    Metadata("Comment", "Create Wordpress web server farm attached to database.")
+    Metadata("Comment": "Create Wordpress web server farm attached to database.")
     Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files" => {
@@ -202,7 +202,7 @@ CloudFormation do
 
   Resource("WordpressDatabase") do
     Type("AWS::CloudFormation::Stack")
-    Metadata("Comment", "Database configuration for Wordpress.")
+    Metadata("Comment": "Database configuration for Wordpress.")
     Property("TemplateURL", FnJoin("/", [
   FnFindInMap("RegionMap", Ref("AWS::Region"), "TemplateLocation"),
   "RDS_MySQL_55.template"

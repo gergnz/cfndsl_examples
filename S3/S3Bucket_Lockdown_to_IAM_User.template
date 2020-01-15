@@ -8,7 +8,7 @@
     "Password" : {
       "Type" : "String",
       "Description" : "IAM user login password",
-      "NoEcho" : "true",
+      "NoEcho" : true,
       "MinLength" : "3",
       "MaxLength" : "50"
     }

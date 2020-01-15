@@ -8,8 +8,8 @@
     "KeyName" : {
       "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instances",
       "Type" : "String",
-      "MinLength": "1",
-      "MaxLength": "64",
+      "MinLength": 1,
+      "MaxLength": 64,
       "AllowedPattern" : "[-_ a-zA-Z0-9]*",
       "ConstraintDescription" : "can contain only alphanumeric characters, spaces, dashes and underscores."
     },    
@@ -18,38 +18,38 @@
       "Default": "insoshi",
       "Description" : "MySQL database name",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "64",
+      "MinLength": 1,
+      "MaxLength": 64,
       "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
       "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
     },
 
     "DBUsername": {
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "Username for MySQL database access",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "16",
+      "MinLength": 1,
+      "MaxLength": 16,
       "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
       "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
     },
 
     "DBPassword": {
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "Password MySQL database access",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "41",
+      "MinLength": 1,
+      "MaxLength": 41,
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },
 
     "DBRootPassword": {
-      "NoEcho": "true",
+      "NoEcho": true,
       "Description" : "Root password for MySQL",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "41",
+      "MinLength": 1,
+      "MaxLength": 41,
       "AllowedPattern" : "[a-zA-Z0-9]*",
       "ConstraintDescription" : "must contain only alphanumeric characters."
     },

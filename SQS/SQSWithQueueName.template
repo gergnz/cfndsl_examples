@@ -7,7 +7,7 @@
       "QueueName" : {
         "Description" : "Name of queue to create",
         "Type" : "String",
-        "MinLength": "1",
+        "MinLength": 1,
         "MaxLength": "80",
         "AllowedPattern": "[a-zA-Z0-9_-]+",
         "ConstraintDescription": "must be a valid queue name."

@@ -1,379 +1,605 @@
 {
-    "AWSTemplateFormatVersion" : "2010-09-09",
-    "Resources" : {
-
-    "Ec2Instance" : {
-      "Type" : "AWS::EC2::Instance",
-      "Properties" : {
-        "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
-                                          { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] },
-        "KeyName" : { "Ref" : "KeyName" },
-        "InstanceType" : { "Ref" : "InstanceType" },
-        "SecurityGroups" : [{ "Ref" : "Ec2SecurityGroup" }],
-        "BlockDeviceMappings" : [
-          {
-            "DeviceName" : "/dev/sda1",
-            "Ebs" : { "VolumeSize" : "50" }
-          },{
-            "DeviceName" : "/dev/sdm",
-            "Ebs" : { "VolumeSize" : "100" }
-          }
-        ]
-      }
-    },
-
-    "Ec2Instance2" : {
-      "Type" : "AWS::EC2::Instance",
-      "Properties" : {
-        "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" }, "PV64" ]},
-        "KeyName" : { "Ref" : "KeyName" },
-        "InstanceType" : "m1.small",
-        "SecurityGroups" : [{ "Ref" : "Ec2SecurityGroup" }],
-        "BlockDeviceMappings" : [
-          {
-            "DeviceName"  : "/dev/sdc",
-            "VirtualName" : "ephemeral0"
-          }
-        ]
-      }
-    },
-"MyEIP" : {
- "Type" : "AWS::EC2::EIP",
- "Properties" : {
-     "InstanceId" : { "Ref" : "logical name of an AWS::EC2::Instance resource" }
- }
-},
-
-
-"IPAssoc" : {
-         "Type" : "AWS::EC2::EIPAssociation",
-         "Properties" : {
-             "InstanceId" : { "Ref" : "logical name of an AWS::EC2::Instance resource" },
-             "EIP" : "existing Elastic IP address"
-         }
-     },
-
-
-"VpcIPAssoc" : {
-         "Type" : "AWS::EC2::EIPAssociation",
-         "Properties" : {
-             "InstanceId" : { "Ref" : "logical name of an AWS::EC2::Instance resource" },
-             "AllocationId" : "existing VPC Elastic IP allocation ID"
-         }
-     },
-
-
-    "ControlPortAddress" : {
-      "Type" : "AWS::EC2::EIP",
-      "Properties" : {
-        "Domain" : "vpc"
-      }
-    },
-    "AssociateControlPort" : {
-      "Type" : "AWS::EC2::EIPAssociation",
-      "Properties" : {
-        "AllocationId" : { "Fn::GetAtt" : [ "ControlPortAddress", "AllocationId" ]},
-        "NetworkInterfaceId" : { "Ref" : "controlXface" }
-      }
-    },
-    "WebPortAddress" : {
-      "Type" : "AWS::EC2::EIP",
-      "Properties" : {
-        "Domain" : "vpc"
-      }
-    },
-    "AssociateWebPort" : {
-      "Type" : "AWS::EC2::EIPAssociation",
-      "Properties" : {
-        "AllocationId" : { "Fn::GetAtt" : [ "WebPortAddress", "AllocationId" ]},
-        "NetworkInterfaceId" : { "Ref" : "webXface" }
-      }
-    },
-    "SSHSecurityGroup" : {
-      "Type" : "AWS::EC2::SecurityGroup",
-      "Properties" : {
-        "VpcId" : { "Ref" : "VpcId" },
-        "GroupDescription" : "Enable SSH access via port 22",
-        "SecurityGroupIngress" : [ { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : "0.0.0.0/0" } ]
-      }
-    },
-    "WebSecurityGroup" : {
-      "Type" : "AWS::EC2::SecurityGroup",
-      "Properties" : {
-        "VpcId" : { "Ref" : "VpcId" },
-        "GroupDescription" : "Enable HTTP access via user defined port",
-        "SecurityGroupIngress" : [ { "IpProtocol" : "tcp", "FromPort" : 80, "ToPort" : 80, "CidrIp" : "0.0.0.0/0" } ]
-      }
-    },
-    "controlXface" : {
-      "Type" : "AWS::EC2::NetworkInterface",
-      "Properties" : {
-        "SubnetId" : { "Ref" : "SubnetId" },
-        "Description" :"Interface for control traffic such as SSH",
-        "GroupSet" : [ {"Ref" : "SSHSecurityGroup"} ],
-        "SourceDestCheck" : "true",
-        "Tags" : [ {"Key" : "Network", "Value" : "Control"}]
-      }
-    },
-   "webXface" : {
-      "Type" : "AWS::EC2::NetworkInterface",
-      "Properties" : {
-        "SubnetId" : { "Ref" : "SubnetId" },
-        "Description" :"Interface for web traffic",
-        "GroupSet" : [ {"Ref" : "WebSecurityGroup"} ],
-        "SourceDestCheck" : "true",
-        "Tags" : [ {"Key" : "Network", "Value" : "Web"}]
-      }
-    },
-    "Ec2Instance3" : {
-      "Type" : "AWS::EC2::Instance",
-      "Properties" : {
-        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
-        "KeyName" : { "Ref" : "KeyName" },
-        "NetworkInterfaces" : [ { "NetworkInterfaceId" : {"Ref" : "controlXface"}, "DeviceIndex" : "0" },
-                                                                { "NetworkInterfaceId" : {"Ref" : "webXface"}, "DeviceIndex" : "1" }],
-        "Tags" : [ {"Key" : "Role", "Value" : "Test Instance"}],
-        "UserData" : {"Fn::Base64" : { "Fn::Join" : ["",[
-                        "#!/bin/bash -ex","\n",
-            "\n","yum install ec2-net-utils -y","\n",
-                        "ec2ifup eth1","\n",
-                        "service httpd start"]]}
-                }
-          }
-    },
-
-
-"MyInstance" : {
- "Type" : "AWS::EC2::Instance",
- "Properties" : {
-     "AvailabilityZone" : "us-east-1a",
-     "ImageId" : "ami-20b65349"
- }
-},
-
-"MyInstance2" : {
- "Type" : "AWS::EC2::Instance",
- "Properties" : {
-     "KeyName" : { "Ref" : "KeyName" },
-     "SecurityGroups" : [ {
-         "Ref" : "logical name of AWS::EC2::SecurityGroup resource"
-     } ],
-     "UserData" : {
-         "Fn::Base64" : {
-             "Fn::Join" : [ ":", [
-                 "PORT=80",
-                 "TOPIC=", {
-                     "Ref" : "logical name of an AWS::SNS::Topic resource"
-                 } ]
-             ]
-         }
-      },
-     "InstanceType" : "m1.small",
-     "AvailabilityZone" : "us-east-1a",
-     "ImageId" : "ami-1e817677",
-     "Volumes" : [
-        { "VolumeId" : {
-             "Ref" : "logical name of AWS::EC2::Volume resource"
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "AvailabilityZone": {
+            "Type": "String"
         },
-        "Device" : "/dev/sdk" }
-     ],
-
-     "Tags" : [ {
-         "Key" : "Name",
-         "Value" : "MyTag"
-     } ]
- }
-},
-
-"MyInstance3" : {
- "Type" : "AWS::EC2::Instance",
- "Properties" : {
-     "UserData" : {
-         "Fn::Base64" : {
-             "Fn::Join" : [ "",
-                 [ "Domain=", {
-                     "Ref" : "logical name of an AWS::SDB::Domain resource"
-                 } ]
-             ]
-         }
-      },
-     "AvailabilityZone" : "us-east-1a",
-     "ImageId" : "ami-20b65349"
- }
-},
-
-"ServerSecurityGroup" : {
- "Type" : "AWS::EC2::SecurityGroup",
- "Properties" : {
-     "GroupDescription" : "allow connections from specified CIDR ranges",
-     "SecurityGroupIngress" : [
-         {
-             "IpProtocol" : "tcp",
-             "FromPort" : "80",
-             "ToPort" : "80",
-             "CidrIp" : "0.0.0.0/0"
-         },{
-             "IpProtocol" : "tcp",
-             "FromPort" : "22",
-             "ToPort" : "22",
-             "CidrIp" : "192.168.1.1/32"
-         }
-     ]
- }
-},
-
-"ServerSecurityGroupBySG" : {
- "Type" : "AWS::EC2::SecurityGroup",
- "Properties" : {
-     "GroupDescription" : "allow connections from specified source security group",
-     "SecurityGroupIngress" : [
-         {
-            "IpProtocol" : "tcp",
-            "FromPort" : "22",
-            "ToPort" : "22",
-            "SourceSecurityGroupName" : "myadminsecuritygroup",
-            "SourceSecurityGroupOwnerId" : "123456789012"
-         },
-         {
-            "IpProtocol" : "tcp",
-            "FromPort" : "80",
-            "ToPort" : "80",
-            "SourceSecurityGroupName" : {"Ref" : "mysecuritygroupcreatedincfn"}
-         }
-     ]
- }
-},
-
-        "myELB" : {
-                 "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
-                 "Properties" : {
-                     "AvailabilityZones" : [ "us-east-1a" ],
-                     "Listeners" : [ {
-                         "LoadBalancerPort" : "80",
-                         "InstancePort" : "80",
-                         "Protocol" : "HTTP"
-                     } ]
-                 }
-             },
-     "ELBIngressGroup" : {
-         "Type" : "AWS::EC2::SecurityGroup",
-         "Properties" : {
-             "GroupDescription" : "ELB ingress group",
-             "SecurityGroupIngress" : [
-                 {
-                    "IpProtocol" : "tcp",
-                    "FromPort" : "80",
-                    "ToPort" : "80",
-                    "SourceSecurityGroupOwnerId" : {"Fn::GetAtt" : ["myELB", "SourceSecurityGroup.OwnerAlias"]},
-                    "SourceSecurityGroupName" : {"Fn::GetAtt" : ["myELB", "SourceSecurityGroup.GroupName"]}
-                 }
-             ]
-         }
+        "Ec2SecurityGroup": {
+            "Type": "String"
+        },
+        "InstanceType": {
+            "Type": "String"
+        },
+        "KeyName": {
+            "Type": "String"
+        },
+        "MySDBDomain": {
+            "Type": "String"
+        },
+        "MyVolume": {
+            "Type": "String"
+        },
+        "SNSTopic": {
+            "Type": "String"
+        },
+        "SubnetId": {
+            "Type": "String"
+        },
+        "VpcId": {
+            "Type": "String"
+        },
+        "mySubnet": {
+            "Type": "String"
+        },
+        "myVPCCIDRRange": {
+            "Type": "String"
+        },
+        "mysecuritygroupcreatedincfn": {
+            "Type": "String"
+        }
     },
-
-
-     "SGroup1" : {
-         "Type" : "AWS::EC2::SecurityGroup",
-         "Properties" : {
-             "GroupDescription" : "EC2 Instance access"
-         }
-     },
-     "SGroup2" : {
-         "Type" : "AWS::EC2::SecurityGroup",
-         "Properties" : {
-             "GroupDescription" : "EC2 Instance access"
-         }
-     },
-     "SGroup1Ingress" : {
-         "Type" : "AWS::EC2::SecurityGroupIngress",
-         "Properties" : {
-             "GroupName" : { "Ref" : "SGroup1" },
-             "IpProtocol" : "tcp",
-             "ToPort" : "80",
-             "FromPort" : "80",
-             "SourceSecurityGroupName" : { "Ref" : "SGroup2" }
-         }
-     },
-     "SGroup2Ingress" : {
-         "Type" : "AWS::EC2::SecurityGroupIngress",
-         "Properties" : {
-             "GroupName" : { "Ref" : "SGroup2" },
-             "IpProtocol" : "tcp",
-             "ToPort" : "80",
-             "FromPort" : "80",
-             "SourceSecurityGroupName" : { "Ref" : "SGroup1" }
-         }
-     },
-
-"MyEBSVolume" : {
- "Type" : "AWS::EC2::Volume",
- "Properties" : {
-     "Size" : "specify a size if no SnapShotId",
-     "SnapshotId" : "specify a SnapShotId if no Size",
-     "AvailabilityZone" : { "Ref" : "AvailabilityZone" }
- },
- "DeletionPolicy" : "Snapshot"
-},
-
- "Ec2Instance4" : {
-   "Type" : "AWS::EC2::Instance",
-   "Properties" : {
-     "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
-     "ImageId" : "ami-76f0061f"
-   }
- },
-
- "InstanceSecurityGroup" : {
-   "Type" : "AWS::EC2::SecurityGroup",
-   "Properties" : {
-     "GroupDescription" : "Enable SSH access via port 22",
-     "SecurityGroupIngress" : [ {
-       "IpProtocol" : "tcp",
-       "FromPort" : "22",
-       "ToPort" : "22",
-       "CidrIp" : "0.0.0.0/0"
-     } ]
-   }
- },
-
- "NewVolume" : {
-   "Type" : "AWS::EC2::Volume",
-   "Properties" : {
-     "Size" : "100",
-     "AvailabilityZone" : { "Fn::GetAtt" : [ "Ec2Instance", "AvailabilityZone" ]}
-   }
- },
-
- "MountPoint" : {
-   "Type" : "AWS::EC2::VolumeAttachment",
-   "Properties" : {
-     "InstanceId" : { "Ref" : "Ec2Instance" },
-     "VolumeId"  : { "Ref" : "NewVolume" },
-     "Device" : "/dev/sdh"
-   }
- },
-
-"myVPC": {
-  "Type": "AWS::EC2::VPC",
-  "Properties": {
-    "CidrBlock": {"Ref": "myVPCCIDRRange"},
-    "EnableDnsSupport": false,
-    "EnableDnsHostnames": false,
-    "InstanceTenancy": "default"
-  }
-},
-
-"myInstance5" : {
-  "Type" : "AWS::EC2::Instance",
-  "Properties" : {
-    "ImageId": {
-      "Fn::FindInMap": ["AWSRegionToAMI",{"Ref": "AWS::Region"},"64"]
-    },
-    "SecurityGroupIds" : [{"Fn::GetAtt": ["myVPC", "DefaultSecurityGroup"]}],
-    "SubnetId" : {"Ref" : "mySubnet"}
-  }
-}
-
-
-}
+    "Resources": {
+        "AssociateControlPort": {
+            "Properties": {
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "ControlPortAddress",
+                        "AllocationId"
+                    ]
+                },
+                "NetworkInterfaceId": {
+                    "Ref": "controlXface"
+                }
+            },
+            "Type": "AWS::EC2::EIPAssociation"
+        },
+        "AssociateWebPort": {
+            "Properties": {
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "WebPortAddress",
+                        "AllocationId"
+                    ]
+                },
+                "NetworkInterfaceId": {
+                    "Ref": "webXface"
+                }
+            },
+            "Type": "AWS::EC2::EIPAssociation"
+        },
+        "ControlPortAddress": {
+            "Properties": {
+                "Domain": "vpc"
+            },
+            "Type": "AWS::EC2::EIP"
+        },
+        "ELBIngressGroup": {
+            "Properties": {
+                "GroupDescription": "ELB ingress group",
+                "SecurityGroupIngress": [
+                    {
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupName": {
+                            "Fn::GetAtt": [
+                                "myELB",
+                                "SourceSecurityGroup.GroupName"
+                            ]
+                        },
+                        "SourceSecurityGroupOwnerId": {
+                            "Fn::GetAtt": [
+                                "myELB",
+                                "SourceSecurityGroup.OwnerAlias"
+                            ]
+                        },
+                        "ToPort": 80
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "Ec2Instance": {
+            "Properties": {
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "VolumeSize": 50
+                        }
+                    },
+                    {
+                        "DeviceName": "/dev/sdm",
+                        "Ebs": {
+                            "VolumeSize": 100
+                        }
+                    }
+                ],
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "AWSRegionArch2AMI",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        {
+                            "Fn::FindInMap": [
+                                "AWSInstanceType2Arch",
+                                {
+                                    "Ref": "InstanceType"
+                                },
+                                "Arch"
+                            ]
+                        }
+                    ]
+                },
+                "InstanceType": {
+                    "Ref": "InstanceType"
+                },
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "Ec2SecurityGroup"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "Ec2Instance2": {
+            "Properties": {
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sdc",
+                        "VirtualName": "ephemeral0"
+                    }
+                ],
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "AWSRegionArch2AMI",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "PV64"
+                    ]
+                },
+                "InstanceType": "m1.small",
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "Ec2SecurityGroup"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "Ec2Instance3": {
+            "Properties": {
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "RegionMap",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "AMI"
+                    ]
+                },
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "NetworkInterfaces": [
+                    {
+                        "DeviceIndex": "0",
+                        "NetworkInterfaceId": {
+                            "Ref": "controlXface"
+                        }
+                    },
+                    {
+                        "DeviceIndex": "1",
+                        "NetworkInterfaceId": {
+                            "Ref": "webXface"
+                        }
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Role",
+                        "Value": "Test Instance"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "#!/bin/bash -ex",
+                                "\n",
+                                "\n",
+                                "yum install ec2-net-utils -y",
+                                "\n",
+                                "ec2ifup eth1",
+                                "\n",
+                                "service httpd start"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "Ec2Instance4": {
+            "Properties": {
+                "ImageId": "ami-76f0061f",
+                "SecurityGroups": [
+                    {
+                        "Ref": "InstanceSecurityGroup"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "IPAssoc": {
+            "Properties": {
+                "EIP": "existing Elastic IP address",
+                "InstanceId": {
+                    "Ref": "Ec2Instance"
+                }
+            },
+            "Type": "AWS::EC2::EIPAssociation"
+        },
+        "InstanceSecurityGroup": {
+            "Properties": {
+                "GroupDescription": "Enable SSH access via port 22",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "ToPort": 22
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "MountPoint": {
+            "Properties": {
+                "Device": "/dev/sdh",
+                "InstanceId": {
+                    "Ref": "Ec2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "NewVolume"
+                }
+            },
+            "Type": "AWS::EC2::VolumeAttachment"
+        },
+        "MyEBSVolume": {
+            "DeletionPolicy": "Snapshot",
+            "Properties": {
+                "AvailabilityZone": {
+                    "Ref": "AvailabilityZone"
+                },
+                "Size": 100,
+                "SnapshotId": "snap-123456789"
+            },
+            "Type": "AWS::EC2::Volume"
+        },
+        "MyEIP": {
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "Ec2Instance"
+                }
+            },
+            "Type": "AWS::EC2::EIP"
+        },
+        "MyInstance": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1a",
+                "ImageId": "ami-20b65349"
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "MyInstance2": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1a",
+                "ImageId": "ami-1e817677",
+                "InstanceType": "m1.small",
+                "KeyName": {
+                    "Ref": "KeyName"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "Ec2SecurityGroup"
+                    }
+                ],
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "MyTag"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            ":",
+                            [
+                                "PORT=80",
+                                "TOPIC=",
+                                {
+                                    "Ref": "SNSTopic"
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "Volumes": [
+                    {
+                        "Device": "/dev/sdk",
+                        "VolumeId": {
+                            "Ref": "MyVolume"
+                        }
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "MyInstance3": {
+            "Properties": {
+                "AvailabilityZone": "us-east-1a",
+                "ImageId": "ami-20b65349",
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "",
+                            [
+                                "Domain=",
+                                {
+                                    "Ref": "MySDBDomain"
+                                }
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "NewVolume": {
+            "Properties": {
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "Ec2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Size": 100
+            },
+            "Type": "AWS::EC2::Volume"
+        },
+        "SGroup1": {
+            "Properties": {
+                "GroupDescription": "EC2 Instance access"
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "SGroup1Ingress": {
+            "Properties": {
+                "FromPort": 80,
+                "GroupName": {
+                    "Ref": "SGroup1"
+                },
+                "IpProtocol": "tcp",
+                "SourceSecurityGroupName": {
+                    "Ref": "SGroup2"
+                },
+                "ToPort": 80
+            },
+            "Type": "AWS::EC2::SecurityGroupIngress"
+        },
+        "SGroup2": {
+            "Properties": {
+                "GroupDescription": "EC2 Instance access"
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "SGroup2Ingress": {
+            "Properties": {
+                "FromPort": 80,
+                "GroupName": {
+                    "Ref": "SGroup2"
+                },
+                "IpProtocol": "tcp",
+                "SourceSecurityGroupName": {
+                    "Ref": "SGroup1"
+                },
+                "ToPort": 80
+            },
+            "Type": "AWS::EC2::SecurityGroupIngress"
+        },
+        "SSHSecurityGroup": {
+            "Properties": {
+                "GroupDescription": "Enable SSH access via port 22",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "ToPort": 22
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VpcId"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "ServerSecurityGroup": {
+            "Properties": {
+                "GroupDescription": "allow connections from specified CIDR ranges",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "ToPort": 80
+                    },
+                    {
+                        "CidrIp": "192.168.1.1/32",
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "ToPort": 22
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "ServerSecurityGroupBySG": {
+            "Properties": {
+                "GroupDescription": "allow connections from specified source security group",
+                "SecurityGroupIngress": [
+                    {
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupName": "myadminsecuritygroup",
+                        "SourceSecurityGroupOwnerId": "123456789012",
+                        "ToPort": 22
+                    },
+                    {
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "SourceSecurityGroupName": {
+                            "Ref": "mysecuritygroupcreatedincfn"
+                        },
+                        "ToPort": 80
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "VpcIPAssoc": {
+            "Properties": {
+                "AllocationId": "existing VPC Elastic IP allocation ID",
+                "InstanceId": {
+                    "Ref": "Ec2Instance"
+                }
+            },
+            "Type": "AWS::EC2::EIPAssociation"
+        },
+        "WebPortAddress": {
+            "Properties": {
+                "Domain": "vpc"
+            },
+            "Type": "AWS::EC2::EIP"
+        },
+        "WebSecurityGroup": {
+            "Properties": {
+                "GroupDescription": "Enable HTTP access via user defined port",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "ToPort": 80
+                    }
+                ],
+                "VpcId": {
+                    "Ref": "VpcId"
+                }
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "controlXface": {
+            "Properties": {
+                "Description": "Interface for control traffic such as SSH",
+                "GroupSet": [
+                    {
+                        "Ref": "SSHSecurityGroup"
+                    }
+                ],
+                "SourceDestCheck": "true",
+                "SubnetId": {
+                    "Ref": "SubnetId"
+                },
+                "Tags": [
+                    {
+                        "Key": "Network",
+                        "Value": "Control"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::NetworkInterface"
+        },
+        "myELB": {
+            "Properties": {
+                "AvailabilityZones": [
+                    "us-east-1a"
+                ],
+                "Listeners": [
+                    {
+                        "InstancePort": 80,
+                        "LoadBalancerPort": 80,
+                        "Protocol": "HTTP"
+                    }
+                ]
+            },
+            "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+        },
+        "myInstance5": {
+            "Properties": {
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "AWSRegionToAMI",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "64"
+                    ]
+                },
+                "SecurityGroupIds": [
+                    {
+                        "Fn::GetAtt": [
+                            "myVPC",
+                            "DefaultSecurityGroup"
+                        ]
+                    }
+                ],
+                "SubnetId": {
+                    "Ref": "mySubnet"
+                }
+            },
+            "Type": "AWS::EC2::Instance"
+        },
+        "myVPC": {
+            "Properties": {
+                "CidrBlock": {
+                    "Ref": "myVPCCIDRRange"
+                },
+                "EnableDnsHostnames": false,
+                "EnableDnsSupport": false,
+                "InstanceTenancy": "default"
+            },
+            "Type": "AWS::EC2::VPC"
+        },
+        "webXface": {
+            "Properties": {
+                "Description": "Interface for web traffic",
+                "GroupSet": [
+                    {
+                        "Ref": "WebSecurityGroup"
+                    }
+                ],
+                "SourceDestCheck": "true",
+                "SubnetId": {
+                    "Ref": "SubnetId"
+                },
+                "Tags": [
+                    {
+                        "Key": "Network",
+                        "Value": "Web"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::NetworkInterface"
+        }
+    }
 }

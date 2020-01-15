@@ -1,6 +1,21 @@
 CloudFormation do
   AWSTemplateFormatVersion("2010-09-09")
 
+  Parameter("myqueue") do
+    Type("String")
+  end
+
+  Parameter("mytopic") do
+    Type("String")
+  end
+
+  Parameter("user1") do
+    Type("String")
+  end
+
+  Parameter("mybucket") do
+    Type("String")
+  end
 
 # Declaring an IAM User Resource
   Resource("myuser") do

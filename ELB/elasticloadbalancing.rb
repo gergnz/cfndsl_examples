@@ -1,7 +1,14 @@
 CloudFormation do
   AWSTemplateFormatVersion("2010-09-09")
 
-# Elastic Load Balancing load balancer with a single listener, and no instances.
+  Parameter("Instance1") do
+    Type("String")
+  end
+  
+  Parameter("Instance2") do
+    Type("String")
+  end
+ # Elastic Load Balancing load balancer with a single listener, and no instances.
   Resource("MyLoadBalancer") do
     Type("AWS::ElasticLoadBalancing::LoadBalancer")
     Property("AvailabilityZones", [
@@ -23,8 +30,8 @@ CloudFormation do
   "us-east-1a"
 ])
     Property("Instances", [
-  Ref("logical name of AWS::EC2::Instance resource 1"),
-  Ref("logical name of AWS::EC2::Instance resource 2")
+  Ref("Instance1"),
+  Ref("Instance2")
 ])
     Property("Listeners", [
   {

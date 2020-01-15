@@ -1,6 +1,54 @@
 CloudFormation do
   AWSTemplateFormatVersion("2010-09-09")
 
+  Parameter("InstanceType") do
+    Type("String")
+  end
+
+  Parameter("KeyName") do
+    Type("String")
+  end
+
+  Parameter("Ec2SecurityGroup") do
+    Type("String")
+  end
+
+  Parameter("VpcId") do
+    Type("String")
+  end
+
+  Parameter("SubnetId") do
+    Type("String")
+  end
+
+  Parameter("SNSTopic") do
+    Type("String")
+  end
+
+  Parameter("MyVolume") do
+    Type("String")
+  end
+
+  Parameter("MySDBDomain") do
+    Type("String")
+  end
+
+  Parameter("mysecuritygroupcreatedincfn") do
+    Type("String")
+  end
+
+  Parameter("AvailabilityZone") do
+    Type("String")
+  end
+
+  Parameter("myVPCCIDRRange") do
+    Type("String")
+  end
+
+  Parameter("mySubnet") do
+    Type("String")
+  end
+
 # EC2 Instance with Block Device Mapping
   Resource("Ec2Instance") do
     Type("AWS::EC2::Instance")
@@ -14,13 +62,13 @@ CloudFormation do
   {
     "DeviceName" => "/dev/sda1",
     "Ebs"        => {
-      "VolumeSize" => "50"
+      "VolumeSize" => 50
     }
   },
   {
     "DeviceName" => "/dev/sdm",
     "Ebs"        => {
-      "VolumeSize" => "100"
+      "VolumeSize" => 100
     }
   }
 ])
@@ -46,20 +94,20 @@ CloudFormation do
 # Assigning an Amazon EC2 Elastic IP Using AWS::EC2::EIP Snippet
   Resource("MyEIP") do
     Type("AWS::EC2::EIP")
-    Property("InstanceId", Ref("logical name of an AWS::EC2::Instance resource"))
+    Property("InstanceId", Ref("Ec2Instance"))
   end
 
 # Assigning an Existing Elastic IP to an Amazon EC2 instance using AWS::EC2::EIPAssociation Snippet
   Resource("IPAssoc") do
     Type("AWS::EC2::EIPAssociation")
-    Property("InstanceId", Ref("logical name of an AWS::EC2::Instance resource"))
+    Property("InstanceId", Ref("Ec2Instance"))
     Property("EIP", "existing Elastic IP address")
   end
 
 # Assigning an Existing VPC Elastic IP to an Amazon EC2 instance using AWS::EC2::EIPAssociation Snippet
   Resource("VpcIPAssoc") do
     Type("AWS::EC2::EIPAssociation")
-    Property("InstanceId", Ref("logical name of an AWS::EC2::Instance resource"))
+    Property("InstanceId", Ref("Ec2Instance"))
     Property("AllocationId", "existing VPC Elastic IP allocation ID")
   end
 
@@ -93,9 +141,9 @@ CloudFormation do
     Property("SecurityGroupIngress", [
   {
     "CidrIp"     => "0.0.0.0/0",
-    "FromPort"   => "22",
+    "FromPort"   => 22,
     "IpProtocol" => "tcp",
-    "ToPort"     => "22"
+    "ToPort"     => 22
   }
 ])
   end
@@ -189,23 +237,12 @@ CloudFormation do
   Resource("MyInstance2") do
     Type("AWS::EC2::Instance")
     Property("KeyName", Ref("KeyName"))
-    Property("SecurityGroups", [
-  Ref("logical name of AWS::EC2::SecurityGroup resource")
-])
-    Property("UserData", FnBase64(FnJoin(":", [
-  "PORT=80",
-  "TOPIC=",
-  Ref("logical name of an AWS::SNS::Topic resource")
-])))
+    Property("SecurityGroups", [ Ref("Ec2SecurityGroup") ])
+    Property("UserData", FnBase64(FnJoin(":", [ "PORT=80", "TOPIC=", Ref("SNSTopic") ])))
     Property("InstanceType", "m1.small")
     Property("AvailabilityZone", "us-east-1a")
     Property("ImageId", "ami-1e817677")
-    Property("Volumes", [
-  {
-    "Device"   => "/dev/sdk",
-    "VolumeId" => Ref("logical name of AWS::EC2::Volume resource")
-  }
-])
+    Property("Volumes", [ { "Device"   => "/dev/sdk", "VolumeId" => Ref("MyVolume") } ])
 
   Property("Tags", [
   {
@@ -220,7 +257,7 @@ CloudFormation do
     Type("AWS::EC2::Instance")
     Property("UserData", FnBase64(FnJoin("", [
   "Domain=",
-  Ref("logical name of an AWS::SDB::Domain resource")
+  Ref("MySDBDomain")
 ])))
     Property("AvailabilityZone", "us-east-1a")
     Property("ImageId", "ami-20b65349")
@@ -233,15 +270,15 @@ CloudFormation do
     Property("SecurityGroupIngress", [
   {
     "CidrIp"     => "0.0.0.0/0",
-    "FromPort"   => "80",
+    "FromPort"   => 80,
     "IpProtocol" => "tcp",
-    "ToPort"     => "80"
+    "ToPort"     => 80
   },
   {
     "CidrIp"     => "192.168.1.1/32",
-    "FromPort"   => "22",
+    "FromPort"   => 22,
     "IpProtocol" => "tcp",
-    "ToPort"     => "22"
+    "ToPort"     => 22
   }
 ])
   end
@@ -252,17 +289,17 @@ CloudFormation do
     Property("GroupDescription", "allow connections from specified source security group")
     Property("SecurityGroupIngress", [
   {
-    "FromPort"                   => "22",
+    "FromPort"                   => 22,
     "IpProtocol"                 => "tcp",
     "SourceSecurityGroupName"    => "myadminsecuritygroup",
     "SourceSecurityGroupOwnerId" => "123456789012",
-    "ToPort"                     => "22"
+    "ToPort"                     => 22
   },
   {
-    "FromPort"                => "80",
+    "FromPort"                => 80,
     "IpProtocol"              => "tcp",
     "SourceSecurityGroupName" => Ref("mysecuritygroupcreatedincfn"),
-    "ToPort"                  => "80"
+    "ToPort"                  => 80
   }
 ])
   end
@@ -275,8 +312,8 @@ CloudFormation do
 ])
     Property("Listeners", [
   {
-    "InstancePort"     => "80",
-    "LoadBalancerPort" => "80",
+    "InstancePort"     => 80,
+    "LoadBalancerPort" => 80,
     "Protocol"         => "HTTP"
   }
 ])
@@ -287,11 +324,11 @@ CloudFormation do
     Property("GroupDescription", "ELB ingress group")
     Property("SecurityGroupIngress", [
   {
-    "FromPort"                   => "80",
+    "FromPort"                   => 80,
     "IpProtocol"                 => "tcp",
     "SourceSecurityGroupName"    => FnGetAtt("myELB", "SourceSecurityGroup.GroupName"),
     "SourceSecurityGroupOwnerId" => FnGetAtt("myELB", "SourceSecurityGroup.OwnerAlias"),
-    "ToPort"                     => "80"
+    "ToPort"                     => 80
   }
 ])
   end
@@ -311,8 +348,8 @@ CloudFormation do
     Type("AWS::EC2::SecurityGroupIngress")
     Property("GroupName", Ref("SGroup1"))
     Property("IpProtocol", "tcp")
-    Property("ToPort", "80")
-    Property("FromPort", "80")
+    Property("ToPort", 80)
+    Property("FromPort", 80)
     Property("SourceSecurityGroupName", Ref("SGroup2"))
   end
 
@@ -320,8 +357,8 @@ CloudFormation do
     Type("AWS::EC2::SecurityGroupIngress")
     Property("GroupName", Ref("SGroup2"))
     Property("IpProtocol", "tcp")
-    Property("ToPort", "80")
-    Property("FromPort", "80")
+    Property("ToPort", 80)
+    Property("FromPort", 80)
     Property("SourceSecurityGroupName", Ref("SGroup1"))
   end
 
@@ -329,8 +366,8 @@ CloudFormation do
   Resource("MyEBSVolume") do
     Type("AWS::EC2::Volume")
     DeletionPolicy("Snapshot")
-    Property("Size", "specify a size if no SnapShotId")
-    Property("SnapshotId", "specify a SnapShotId if no Size")
+    Property("Size", 100)
+    Property("SnapshotId", "snap-123456789")
     Property("AvailabilityZone", Ref("AvailabilityZone"))
   end
 
@@ -349,16 +386,16 @@ CloudFormation do
     Property("SecurityGroupIngress", [
   {
     "CidrIp"     => "0.0.0.0/0",
-    "FromPort"   => "22",
+    "FromPort"   => 22,
     "IpProtocol" => "tcp",
-    "ToPort"     => "22"
+    "ToPort"     => 22
   }
 ])
   end
 
   Resource("NewVolume") do
     Type("AWS::EC2::Volume")
-    Property("Size", "100")
+    Property("Size", 100)
     Property("AvailabilityZone", FnGetAtt("Ec2Instance", "AvailabilityZone"))
   end
 

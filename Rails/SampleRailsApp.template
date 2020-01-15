@@ -70,9 +70,7 @@
     },
 
     "WaitForInstanceWaitHandle" : {
-      "Type" : "AWS::CloudFormation::WaitConditionHandle",
-      "Properties" : {
-      }
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
     },
 
     "WaitForInstance" : {
