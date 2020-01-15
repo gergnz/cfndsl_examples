@@ -31,10 +31,11 @@ CloudFormation do
 
   Resource("Ec2Instance") do
     Type("AWS::EC2::Instance")
-    Metadata("Comment", "This metadata is availabile via the cfn-describe-stack-resource command line tool, the DescribeStackResource API call or the cfn-get-metadata helper")
-    Metadata("MyAMI", FnFindInMap("RegionMap", Ref("AWS::Region"), "AMI"))
-    Metadata("MyRegion", Ref("AWS::Region"))
-    Metadata("MyStack", Ref("AWS::StackId"))
+    Metadata(
+      "Comment": "This metadata is availabile via the cfn-describe-stack-resource command line tool, the DescribeStackResource API call or the cfn-get-metadata helper",
+      "MyAMI": FnFindInMap("RegionMap", Ref("AWS::Region"), "AMI"),
+      "MyRegion": Ref("AWS::Region"),
+      "MyStack": Ref("AWS::StackId"))
     Property("ImageId", FnFindInMap("RegionMap", Ref("AWS::Region"), "AMI"))
     Property("UserData", FnBase64("80"))
   end

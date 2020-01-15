@@ -28,9 +28,7 @@
             }
         },
         "myWaitHandle" : {
-            "Type" : "AWS::CloudFormation::WaitConditionHandle",
-            "Properties" : {
-            }
+            "Type" : "AWS::CloudFormation::WaitConditionHandle"
         },
         "myWaitCondition" : {
             "Type" : "AWS::CloudFormation::WaitCondition",

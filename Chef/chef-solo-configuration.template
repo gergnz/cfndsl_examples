@@ -20,14 +20,14 @@
     "StackNameOrId" : {
       "Description" : "The StackName or StackId containing the resource with the Chef configuration metadata",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "128"
+      "MinLength": 1,
+      "MaxLength": 128
     },
     "ResourceName" : {
       "Description" : "The Logical Resource Name in the stack defined by StackName containing the resource with the Chef configuration metadata",
       "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "128",
+      "MinLength": 1,
+      "MaxLength": 128,
       "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*"
     },
     "InstanceType" : {
@@ -49,8 +49,8 @@
     "DesiredCapacity": {
       "Default" : "1",
       "Type": "Number",
-      "MinValue": "1",
-      "MaxValue": "6",
+      "MinValue": 1,
+      "MaxValue": 6,
       "Description" : "Port for web servers to listen on"
     },
     "HealthCheckPath" : {

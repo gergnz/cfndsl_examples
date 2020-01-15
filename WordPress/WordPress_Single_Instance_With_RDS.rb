@@ -190,7 +190,7 @@ CloudFormation do
 
   Resource("WebServer") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/var/www/html/wordpress/wp-config.php" => {

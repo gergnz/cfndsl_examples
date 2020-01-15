@@ -192,7 +192,7 @@ CloudFormation do
 
   Resource("WebServer") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/home/ec2-user/redmine/redmine-2.0.2/config/database.yml" => {

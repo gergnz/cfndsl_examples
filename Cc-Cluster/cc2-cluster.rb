@@ -5,7 +5,7 @@ CloudFormation do
   Parameter("AccountNumber") do
     Description("Twelve digit AWS account number")
     Type("String")
-    NoEcho(True)
+    NoEcho(true)
   end
 
   Parameter("KeyName") do
@@ -72,7 +72,7 @@ CloudFormation do
 
   Resource("Ec2Instance") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/home/ec2-user/cc2-template.erb" => {

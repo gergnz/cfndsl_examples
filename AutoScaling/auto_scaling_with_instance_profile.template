@@ -130,7 +130,6 @@
         },
         "myASGrpOne": {
             "Type": "AWS::AutoScaling::AutoScalingGroup",
-            "Version": "2009-05-15",
             "Properties": {
                 "AvailabilityZones": {
                     "Fn::GetAZs": ""

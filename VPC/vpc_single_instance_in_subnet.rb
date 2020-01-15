@@ -263,7 +263,7 @@ CloudFormation do
   Resource("WebServerInstance") do
     Type("AWS::EC2::Instance")
     Metadata("Comment", "Install a simple PHP application")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/etc/cfn/cfn-hup.conf"                   => {

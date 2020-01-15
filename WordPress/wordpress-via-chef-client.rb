@@ -185,7 +185,7 @@ CloudFormation do
 
   Resource("ChefClient") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/etc/chef/chef.json"                                       => {

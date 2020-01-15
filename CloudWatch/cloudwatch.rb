@@ -139,8 +139,9 @@ CloudFormation do
     CreationPolicy("ResourceSignal", {
   "Timeout" => "PT5M"
 })
-    Metadata("Comment", "Install a simple PHP application")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata(
+      "Comment": "Install a simple PHP application",
+      "AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/etc/cfn/cfn-hup.conf"                   => {

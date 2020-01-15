@@ -280,7 +280,7 @@ CloudFormation do
 
   Resource("ElasticLoadBalancer") do
     Type("AWS::ElasticLoadBalancing::LoadBalancer")
-    Metadata("Comment", "Configure the Load Balancer with a simple health check and cookie-based stickiness")
+    Metadata("Comment": "Configure the Load Balancer with a simple health check and cookie-based stickiness")
     Property("AvailabilityZones", FnGetAZs(""))
     Property("LBCookieStickinessPolicy", [
   {
@@ -321,7 +321,7 @@ CloudFormation do
 
   Resource("LaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/etc/passwd-s3fs"            => {

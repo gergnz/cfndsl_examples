@@ -1,6 +1,26 @@
 CloudFormation do
   AWSTemplateFormatVersion("2010-09-09")
 
+  Parameter("myEC2SecurityGroup") do
+    Description("Existing EC2 Security Group")
+    Type("String")
+  end
+
+  Parameter("LB") do
+    Description("Existing Load Balancer")
+    Type("String")
+  end
+
+  Parameter("azList") do
+    Description("List of Availability Zones")
+    Type("List<AWS::EC2::AvailabilityZone::Name>")
+  end
+
+  Parameter("topic1") do
+    Description("Existing SNS Topic")
+    Type("String")
+  end
+
 # Auto Scaling Launch Configuration Resource
   Resource("SimpleConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
@@ -40,7 +60,7 @@ CloudFormation do
   Resource("ScaleUpPolicy") do
     Type("AWS::AutoScaling::ScalingPolicy")
     Property("AdjustmentType", "ChangeInCapacity")
-    Property("AutoScalingGroupName", Ref("asGroup"))
+    Property("AutoScalingGroupName", Ref("MyServerGroup"))
     Property("Cooldown", "1")
     Property("ScalingAdjustment", "1")
   end
@@ -59,7 +79,7 @@ CloudFormation do
     Property("Dimensions", [
   {
     "Name"  => "AutoScalingGroupName",
-    "Value" => Ref("asGroup")
+    "Value" => Ref("MyServerGroup")
   }
 ])
     Property("ComparisonOperator", "GreaterThanThreshold")
@@ -70,7 +90,7 @@ CloudFormation do
   Resource("MyAsGroupWithNotification") do
     Type("AWS::AutoScaling::AutoScalingGroup")
     Property("AvailabilityZones", Ref("azList"))
-    Property("LaunchConfigurationName", Ref("myLCOne"))
+    Property("LaunchConfigurationName", Ref("SimpleConfig"))
     Property("MinSize", "0")
     Property("MaxSize", "2")
     Property("DesiredCapacity", "1")

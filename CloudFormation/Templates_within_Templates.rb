@@ -133,7 +133,7 @@ CloudFormation do
 
   Resource("WebServer") do
     Type("AWS::CloudFormation::Stack")
-    Metadata("Comment", "Create web server farm attached to database.")
+    Metadata("Comment": "Create web server farm attached to database.")
     Property("TemplateURL", FnJoin("/", [
   FnFindInMap("RegionMap", Ref("AWS::Region"), "s3Bucket"),
   "PHP_Database_Application.template"
@@ -153,7 +153,7 @@ CloudFormation do
 
   Resource("AppDatabase") do
     Type("AWS::CloudFormation::Stack")
-    Metadata("Comment", "Application database.")
+    Metadata("Comment": "Application database.")
     Property("TemplateURL", FnJoin("/", [
   FnFindInMap("RegionMap", Ref("AWS::Region"), "s3Bucket"),
   "RDS_MySQL_55.template"

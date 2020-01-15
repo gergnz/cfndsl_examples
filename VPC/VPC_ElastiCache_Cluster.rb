@@ -257,7 +257,7 @@ CloudFormation do
 
   Resource("WebServerHost") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "commands" => {
       "00_install_memcached_client" => {

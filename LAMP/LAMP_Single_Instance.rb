@@ -180,7 +180,7 @@ CloudFormation do
     Type("AWS::EC2::Instance")
     Metadata("Comment1", "Configure the bootstrap helpers to install the Apache Web Server and PHP")
     Metadata("Comment2", "The website content is downloaded from the CloudFormationPHPSample.zip file")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/tmp/setup.mysql" => {

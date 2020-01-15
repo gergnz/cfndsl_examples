@@ -168,7 +168,7 @@ CloudFormation do
 
   Resource("ProducerConsumer1") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "sources" => {
       "/tmp/sqs-producer-consumer-sample" => "https://s3.amazonaws.com/cloudformation-examples/sqs-producer-consumer-sample.tar"
@@ -227,7 +227,7 @@ CloudFormation do
 
   Resource("ProducerConsumer2") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "sources" => {
       "/tmp/sqs-producer-consumer-sample" => "https://s3.amazonaws.com/cloudformation-examples/sqs-producer-consumer-sample.tar"

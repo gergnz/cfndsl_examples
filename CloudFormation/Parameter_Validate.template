@@ -7,8 +7,8 @@
 
     "NumberWithRange" : {
       "Type" : "Number",
-      "MinValue" : "1",
-      "MaxValue" : "10",
+      "MinValue" : 1,
+      "MaxValue" : 10,
       "Default"  : "2",
       "Description" : "Enter a number between 1 and 10, default is 2"
     },
@@ -21,8 +21,8 @@
     "StringWithLength" : {
       "Type" : "String",
       "Default" : "Hello World",
-      "MaxLength" : "20",
-      "MinLength" : "5",
+      "MaxLength" : 20,
+      "MinLength" : 5,
       "Description" : "Enter a string, between 5 and 20 characters in length",
       "ConstraintDescription" : "must have beteen 5 and 20 characters"
     },
@@ -36,7 +36,7 @@
       "Type" : "String",
       "Default" : "Hello",
       "AllowedPattern" : "[A-Za-z0-9]+",
-      "MaxLength" : "10",
+      "MaxLength" : 10,
       "Description" : "Enter a string with alpha-numeric characters only",
       "ConstraintDescription" : "must only contain upper and lower case letters and numbers"
     }

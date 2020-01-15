@@ -134,7 +134,7 @@ CloudFormation do
 
   Resource("Ec2Instance") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "packages" => {
       "yum" => {

@@ -238,7 +238,7 @@ CloudFormation do
 
   Resource("LaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "chefversion" => {
     "files"    => {
       "/etc/chef/solo.rb" => {

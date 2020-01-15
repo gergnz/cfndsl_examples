@@ -255,7 +255,7 @@ CloudFormation do
     Type("AWS::AutoScaling::LaunchConfiguration")
     Metadata("Comment1", "Configure the bootstrap helpers to install the Rails")
     Metadata("Comment2", "The application is downloaded from the CloudFormationRailsSample.zip file")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/home/ec2-user/sample/config/database.yml" => {

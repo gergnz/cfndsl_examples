@@ -218,7 +218,7 @@ CloudFormation do
   Resource("LaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
     Metadata("Comment", "Install a simple PHP application")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "AmazonLibraries" => {
     "sources" => {
       "/home/ec2-user/sqs" => "http://s3.amazonaws.com/awscode/amazon-queue/2009-02-01/perl/library/amazon-queue-2009-02-01-perl-library.zip"

@@ -1,5 +1,23 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "topic1": {
+      "Description": "Existing SNS Topic",
+      "Type": "String"
+    },
+    "myEC2SecurityGroup": {
+      "Description": "Existing EC2 Security Group",
+      "Type": "String"
+    },
+    "LB": {
+      "Description": "Existing Load Balancer",
+      "Type": "String"
+    },
+    "azList": {
+      "Description": "List of Availability Zones",
+      "Type": "List<AWS::EC2::AvailabilityZone::Name>"
+    }
+  },
   "Resources": {
 "SimpleConfig" : {
    "Type" : "AWS::AutoScaling::LaunchConfiguration",
@@ -33,7 +51,7 @@
    "Type" : "AWS::AutoScaling::ScalingPolicy",
    "Properties" : {
       "AdjustmentType" : "ChangeInCapacity",
-      "AutoScalingGroupName" : { "Ref" : "asGroup" },
+      "AutoScalingGroupName" : { "Ref" : "MyServerGroup" },
       "Cooldown" : "1",
       "ScalingAdjustment" : "1"
    }
@@ -50,7 +68,7 @@
       "Namespace": "AWS/EC2",
       "Dimensions": [ {
          "Name": "AutoScalingGroupName",
-         "Value": { "Ref": "asGroup" }
+         "Value": { "Ref": "MyServerGroup" }
       } ],
       "ComparisonOperator": "GreaterThanThreshold",
       "MetricName": "CPUUtilization"
@@ -62,7 +80,7 @@
    "Type" : "AWS::AutoScaling::AutoScalingGroup",
    "Properties" : {
       "AvailabilityZones" : { "Ref" : "azList" },
-      "LaunchConfigurationName" : { "Ref" : "myLCOne" },
+      "LaunchConfigurationName" : { "Ref" : "SimpleConfig" },
       "MinSize" : "0",
       "MaxSize" : "2",
       "DesiredCapacity" : "1",

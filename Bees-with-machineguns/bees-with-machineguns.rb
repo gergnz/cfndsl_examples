@@ -209,7 +209,7 @@ CloudFormation do
 
   Resource("BeeController") do
     Type("AWS::EC2::Instance")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "commands" => {
       "00install_aws" => {
@@ -515,7 +515,7 @@ CloudFormation do
 
   Resource("LaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "packages" => {
       "yum" => {

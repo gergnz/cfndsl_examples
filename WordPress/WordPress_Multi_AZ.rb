@@ -252,7 +252,7 @@ CloudFormation do
 
   Resource("LaunchConfig") do
     Type("AWS::AutoScaling::LaunchConfiguration")
-    Metadata("AWS::CloudFormation::Init", {
+    Metadata("AWS::CloudFormation::Init": {
   "config" => {
     "files"    => {
       "/var/www/html/wordpress/wp-config.php" => {
